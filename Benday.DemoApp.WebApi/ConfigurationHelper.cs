@@ -30,12 +30,25 @@ public class ConfigurationHelper
     }
     public void ConfigureIdentity()
     {
+        var cosmosConfig = GetCosmosConfig();
+
         _Builder.Services.AddCosmosRepository(setup =>
         {
-            setup.ConnectionString = GetCosmosConfig().ConnectionString;
+            setup.ConnectionString = cosmosConfig.ConnectionString;
+            setup.DatabaseId = cosmosConfig.DatabaseName;
         });
 
-        _Builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+        _Builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+        {
+            options.Password.RequireDigit = false;
+            options.Password.RequiredLength = 3;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequiredUniqueChars = 0;
+            options.User.RequireUniqueEmail = true;
+        })
             .AddCosmosStores()
             .AddDefaultUI()
             .AddDefaultTokenProviders();
