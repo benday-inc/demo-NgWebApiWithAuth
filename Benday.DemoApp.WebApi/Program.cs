@@ -1,4 +1,5 @@
 using Benday.DemoApp.WebApi;
+using Microsoft.OpenApi.Models;
 
 public class Program
 {
@@ -12,6 +13,14 @@ public class Program
 
         var helper = new ConfigurationHelper(builder);
 
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { 
+                Title = "Benday Demo API", 
+                Version = "v1"                
+            });
+        });
+
         helper.ConfigureIdentity();
 
         var app = builder.Build();
@@ -19,6 +28,13 @@ public class Program
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Benday Demo API v1");
+                c.EnableTryItOutByDefault();
+            });
+
             app.MapOpenApi();
         }
 

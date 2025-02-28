@@ -30,7 +30,10 @@ public class ConfigurationHelper
     }
     public void ConfigureIdentity()
     {
-        _Builder.Services.AddCosmosRepository();
+        _Builder.Services.AddCosmosRepository(setup =>
+        {
+            setup.ConnectionString = GetCosmosConfig().ConnectionString;
+        });
 
         _Builder.Services.AddIdentity<IdentityUser, IdentityRole>()
             .AddCosmosStores()
