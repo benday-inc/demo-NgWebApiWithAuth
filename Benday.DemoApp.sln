@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benday.DemoApp.WebApi", "Benday.DemoApp.WebApi\Benday.DemoApp.WebApi.csproj", "{DCA5AE50-5980-41CE-A140-036D025C078A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benday.DemoApp.Api", "Benday.DemoApp.Api\Benday.DemoApp.Api.csproj", "{20203DE2-57D7-470D-9E93-671328CE3336}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{DCA5AE50-5980-41CE-A140-036D025C078A}.Release|x64.Build.0 = Release|Any CPU
 		{DCA5AE50-5980-41CE-A140-036D025C078A}.Release|x86.ActiveCfg = Release|Any CPU
 		{DCA5AE50-5980-41CE-A140-036D025C078A}.Release|x86.Build.0 = Release|Any CPU
+		{20203DE2-57D7-470D-9E93-671328CE3336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20203DE2-57D7-470D-9E93-671328CE3336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20203DE2-57D7-470D-9E93-671328CE3336}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{20203DE2-57D7-470D-9E93-671328CE3336}.Debug|x64.Build.0 = Debug|Any CPU
+		{20203DE2-57D7-470D-9E93-671328CE3336}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{20203DE2-57D7-470D-9E93-671328CE3336}.Debug|x86.Build.0 = Debug|Any CPU
+		{20203DE2-57D7-470D-9E93-671328CE3336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20203DE2-57D7-470D-9E93-671328CE3336}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20203DE2-57D7-470D-9E93-671328CE3336}.Release|x64.ActiveCfg = Release|Any CPU
+		{20203DE2-57D7-470D-9E93-671328CE3336}.Release|x64.Build.0 = Release|Any CPU
+		{20203DE2-57D7-470D-9E93-671328CE3336}.Release|x86.ActiveCfg = Release|Any CPU
+		{20203DE2-57D7-470D-9E93-671328CE3336}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
