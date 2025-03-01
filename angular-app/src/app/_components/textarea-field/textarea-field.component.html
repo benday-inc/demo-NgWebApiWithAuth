@@ -1,0 +1,32 @@
+<ng-container [formGroup]="parentForm">
+    <div class="mb-3">
+        
+        <label class="form-label" [class.fw-bold]="labelIsBold === 'true'" for="textbox1">{{displayName}}: </label>
+        <textarea id="textbox1" class="form-control" 
+            [placeholder]="placeholder"
+            rows="{{rows}}"
+            formControlName="{{controlName}}"
+            placeholder="{{displayName}}" (ngModelChange)="valueChanged($event)"></textarea>
+        <div *ngIf="parentForm.controls[controlName].enabled === true && !parentForm.controls[controlName].valid"
+            class="validation-message">
+            not valid
+        </div>
+        <div *ngIf="
+            parentForm.controls[controlName].invalid &&
+              (parentForm.controls[controlName].dirty || parentForm.controls[controlName].touched)
+            ">
+            <div *ngIf="parentForm.controls[controlName].errors?.['maxLength']" class="alert alert-warning" role="alert">
+                {{displayName}} value is too long
+            </div>
+            <div *ngIf="parentForm.controls[controlName].errors?.['minLength']" class="alert alert-warning" role="alert">
+                {{displayName}} value is not enough
+            </div>
+            <div *ngIf="parentForm.controls[controlName].errors?.['required']" class="alert alert-warning" role="alert">
+                {{displayName}} value is required
+            </div>
+            <div *ngIf="parentForm.controls[controlName].errors?.['noSpaces']" class="alert alert-warning" role="alert">
+                {{displayName}} value cannot contain spaces
+            </div>
+        </div>
+    </div>
+</ng-container>

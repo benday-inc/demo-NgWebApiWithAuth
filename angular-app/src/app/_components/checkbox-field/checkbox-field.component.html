@@ -1,0 +1,15 @@
+<ng-container [formGroup]="parentForm">
+    <div class="mb-3">
+        <div class="form-check" [class.form-switch]="displayAsSwitch" [class.form-control-lg]="isLarge">
+            <input class="form-check-input" type="checkbox" [attr.role]="displayAsSwitch ? 'switch' : null"
+                id="checkbox" (ngModelChange)="selectionChanged($event)" formControlName="{{controlName}}">
+            <label class="form-check-label" for="checkbox">
+                {{displayName}}
+            </label>
+        </div>
+
+        <div *ngIf="!parentForm.controls[controlName]?.valid" class="validation-message">
+            not valid
+        </div>
+    </div>
+</ng-container>

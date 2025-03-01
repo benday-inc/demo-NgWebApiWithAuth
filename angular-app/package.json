@@ -3,10 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --ssl --ssl-key ../angular-dev-ssl/dev-ssl-cert-key.key  --ssl-cert ../angular-dev-ssl/dev-ssl-cert.crt",
+    "start-windows": "ng serve --ssl --ssl-key ..\\angular-dev-ssl\\dev-ssl-cert-key.key --ssl-cert ..\\angular-dev-ssl\\dev-ssl-cert.crt",
     "build": "ng build",
+    "build-prod": "ng build -c production",
+    "build-dev": "ng build -c development",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {

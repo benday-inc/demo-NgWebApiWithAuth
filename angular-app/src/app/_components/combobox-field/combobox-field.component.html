@@ -1,0 +1,15 @@
+<ng-container [formGroup]="parentForm">
+    <div class="mb-3">
+        <label class="form-label" for="selectbox">{{displayName}}</label>
+
+        <select id="selectbox" class="form-select" formControlName="{{controlName}}" (ngModelChange)="selectionChanged($event)">
+            <option value="" disabled selected>(select an option)</option>
+            <option *ngFor="let option of availableValues" [value]="option.key">
+                {{ option.value }}
+            </option>
+        </select>
+        <div *ngIf="!parentForm.controls[controlName]?.valid" class="validation-message">
+            not valid
+        </div>
+    </div>
+</ng-container>
