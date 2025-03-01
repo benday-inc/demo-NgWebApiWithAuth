@@ -1,4 +1,5 @@
 ﻿
+using Benday.CosmosDb.Utilities;
 using Cosmos.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -18,19 +19,12 @@ public class ConfigurationHelper
         _Builder = builder;
     }
 
-    public CosmosConfig GetCosmosConfig()
-    {
-        var config = new CosmosConfig();
-
-        config.Key = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
-        config.Endpoint = "https://localhost:8081";
-        config.DatabaseName = "BendayDemoApp";
-
-        return config;
-    }
+    /// <summary>
+    /// Configures ASP.NET Core Identity
+    /// </summary>
     public void ConfigureIdentity()
     {
-        var cosmosConfig = GetCosmosConfig();
+        var cosmosConfig = _Builder.Configuration.GetCosmosConfig();
 
         _Builder.Services.AddCosmosRepository(setup =>
         {
