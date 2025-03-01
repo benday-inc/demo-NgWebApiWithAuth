@@ -1,5 +1,6 @@
 ﻿
 using Benday.CosmosDb.Utilities;
+using Benday.DemoApp.Api;
 using Cosmos.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +20,15 @@ public class ConfigurationHelper
         _Builder = builder;
     }
 
+    public void ConfigureServices()
+    {
+        var cosmosConfig = _Builder.Configuration.GetCosmosConfig();
+
+        var helper = new CosmosRegistrationHelper(
+            _Builder.Services, cosmosConfig);
+
+        helper.RegisterRepositoryAndService<Note>();
+    }
     /// <summary>
     /// Configures ASP.NET Core Identity
     /// </summary>

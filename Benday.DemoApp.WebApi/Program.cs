@@ -22,6 +22,7 @@ public class Program
         });
 
         helper.ConfigureIdentity();
+        helper.ConfigureServices();
 
         var app = builder.Build();
 
