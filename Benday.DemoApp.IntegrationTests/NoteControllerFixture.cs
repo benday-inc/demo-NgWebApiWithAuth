@@ -6,6 +6,7 @@ using System.Text.Json;
 using Xunit.Abstractions;
 
 namespace Benday.DemoApp.IntegrationTests;
+
 public class NoteControllerFixture : TestClassBase
 {
     public NoteControllerFixture(ITestOutputHelper output) : base(output)

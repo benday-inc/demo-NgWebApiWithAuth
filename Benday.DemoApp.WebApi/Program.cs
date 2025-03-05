@@ -7,6 +7,10 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Configuration.AddJsonFile("appsettings.json");
+        builder.Configuration.AddJsonFile("appsettings.Development.json", optional: true);
+        builder.Configuration.AddJsonFile("appsettings.unversioned.json", optional: true);
+
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
@@ -15,9 +19,10 @@ public class Program
 
         builder.Services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { 
-                Title = "Benday Demo API", 
-                Version = "v1"                
+            c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "Benday Demo API",
+                Version = "v1"
             });
         });
 
