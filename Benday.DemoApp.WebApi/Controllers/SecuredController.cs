@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Benday.DemoApp.WebApi.Controllers;
 
-[Route("api/sample")]
+[Route("api/secured")]
 [ApiController]
-public class SampleController : ControllerBase
+public class SecuredController : ControllerBase
 {
     [Authorize]
     [HttpGet("protected")]
