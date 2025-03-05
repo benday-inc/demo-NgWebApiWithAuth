@@ -2,10 +2,8 @@
 
 namespace Benday.Identity.CosmosDb
 {
-    public class IdentityUser : OwnedItemBase
+    public class IdentityUser : SystemOwnedItem
     {
-        public override string OwnerId { get => IdentityConstants.SystemOwnerId; }
-
         public string UserName { get; set; } = string.Empty;
         public string NormalizedUserName 
         { 
