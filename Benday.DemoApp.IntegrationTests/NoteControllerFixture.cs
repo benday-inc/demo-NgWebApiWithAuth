@@ -18,7 +18,7 @@ public class NoteControllerFixture : TestClassBase
     public async Task Index_Get_WithOwnerId_ReturnsSuccess()
     {
         // arrange
-        var factory = new WebApplicationFactory<MarkerClassForTesting>();
+        using var factory = new WebApplicationFactory<MarkerClassForTesting>();
 
         var client = factory.CreateClient();
 
@@ -53,7 +53,7 @@ public class NoteControllerFixture : TestClassBase
     public async Task Index_Post_NewNote()
     {
         // arrange
-        var factory = new WebApplicationFactory<MarkerClassForTesting>();
+        using var factory = new WebApplicationFactory<MarkerClassForTesting>();
 
         var client = factory.CreateClient();
 
