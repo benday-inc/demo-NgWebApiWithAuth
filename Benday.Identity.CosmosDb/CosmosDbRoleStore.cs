@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace Benday.Identity.CosmosDb
 {
+
     public class CosmosDbRoleStore :
         CosmosOwnedItemRepository<IdentityRole>, IRoleStore<IdentityRole>
     {
