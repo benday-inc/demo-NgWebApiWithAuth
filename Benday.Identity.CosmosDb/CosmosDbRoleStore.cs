@@ -8,7 +8,8 @@ namespace Benday.Identity.CosmosDb
 {
 
     public class CosmosDbRoleStore :
-        CosmosOwnedItemRepository<IdentityRole>, IRoleStore<IdentityRole>
+        CosmosOwnedItemRepository<IdentityRole>, 
+        IRoleStore<IdentityRole>
     {
         public CosmosDbRoleStore(
            IOptions<CosmosRepositoryOptions<IdentityRole>> options,

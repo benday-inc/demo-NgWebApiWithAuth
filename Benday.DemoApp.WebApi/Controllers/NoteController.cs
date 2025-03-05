@@ -1,6 +1,6 @@
 ﻿using Benday.CosmosDb.ServiceLayers;
+using Benday.CosmosDb.Utilities;
 using Benday.DemoApp.Api;
-using Cosmos.Abstracts.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Benday.DemoApp.WebApi.Controllers;

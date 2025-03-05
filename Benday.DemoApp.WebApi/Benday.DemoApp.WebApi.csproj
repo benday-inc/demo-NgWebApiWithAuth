@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <PackageReference Include="Benday.CosmosDb" Version="4.1.1" />
-    <PackageReference Include="Cosmos.Identity" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.2" />
@@ -23,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Benday.DemoApp.Api\Benday.DemoApp.Api.csproj" />
+    <ProjectReference Include="..\Benday.Identity.CosmosDb\Benday.Identity.CosmosDb.csproj" />
   </ItemGroup>
 
 </Project>

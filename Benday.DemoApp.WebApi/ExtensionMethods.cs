@@ -19,5 +19,21 @@ public static class ExtensionMethods
 
         return value;
     }
+
+    public static bool IsNullOrWhiteSpace(this string? value)
+    {
+        if (value == null)
+        {
+            return true;
+        }
+        else if (string.IsNullOrWhiteSpace(value) == true)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 

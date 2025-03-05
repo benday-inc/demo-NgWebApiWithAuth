@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using IdentityRole = Cosmos.Identity.IdentityRole;
-using IdentityUser = Cosmos.Identity.IdentityUser;
+//using IdentityRole = Cosmos.Identity.IdentityRole;
+//using IdentityUser = Cosmos.Identity.IdentityUser;
 
 
 namespace Benday.DemoApp.WebApi.Controllers;
@@ -87,7 +87,7 @@ public class AuthController : ControllerBase
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
