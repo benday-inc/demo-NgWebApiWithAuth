@@ -1,5 +1,7 @@
 using Benday.DemoApp.WebApi;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 public class Program
 {
@@ -70,6 +72,11 @@ public class Program
         app.Run();
     }
 }
+//var connectionString = builder.Configuration.GetConnectionString("IdentityDataContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityDataContextConnection' not found.");;
+
+//builder.Services.AddDbContext<IdentityDataContext>(options => options.UseSqlServer(connectionString));
+
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<IdentityDataContext>();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
