@@ -16,14 +16,18 @@ namespace Benday.Identity.CosmosDb
         {
         }
 
-        public Task<IdentityResult> CreateAsync(IdentityRole role, CancellationToken cancellationToken)
+        public async Task<IdentityResult> CreateAsync(IdentityRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await SaveAsync(role);
+
+            return IdentityResult.Success;
         }
 
-        public Task<IdentityResult> DeleteAsync(IdentityRole role, CancellationToken cancellationToken)
+        public async Task<IdentityResult> DeleteAsync(IdentityRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await DeleteAsync(role);
+
+            return IdentityResult.Success;
         }
 
         public void Dispose()
@@ -31,44 +35,59 @@ namespace Benday.Identity.CosmosDb
 
         }
 
-        public Task<IdentityRole?> FindByIdAsync(string roleId, CancellationToken cancellationToken)
+        public async Task<IdentityRole?> FindByIdAsync(string roleId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await GetByIdAsync(IdentityConstants.SystemOwnerId, roleId);
         }
 
-        public Task<IdentityRole?> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
+        public async Task<IdentityRole?> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var query = await GetQueryable();
+
+            var queryable = query.Queryable.Where(x => x.NormalizedName == normalizedRoleName);
+
+            var results = await GetResults(queryable, GetQueryDescription(), query.PartitionKey);
+
+            return results.FirstOrDefault();
         }
 
         public Task<string?> GetNormalizedRoleNameAsync(IdentityRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<string?>(role.NormalizedName);
         }
 
         public Task<string> GetRoleIdAsync(IdentityRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<string>(role.Id);
         }
 
         public Task<string?> GetRoleNameAsync(IdentityRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<string?>(role.Name);
         }
 
         public Task SetNormalizedRoleNameAsync(IdentityRole role, string? normalizedName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task SetRoleNameAsync(IdentityRole role, string? roleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(roleName))
+            {
+                throw new ArgumentException($"{nameof(roleName)} is null or empty.", nameof(roleName));
+            }
+
+            role.Name = roleName;
+
+            return Task.CompletedTask;
         }
 
-        public Task<IdentityResult> UpdateAsync(IdentityRole role, CancellationToken cancellationToken)
+        public async Task<IdentityResult> UpdateAsync(IdentityRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await SaveAsync(role);
+
+            return IdentityResult.Success;
         }
     }
 }
