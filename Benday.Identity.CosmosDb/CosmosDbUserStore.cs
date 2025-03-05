@@ -8,7 +8,8 @@ namespace Benday.Identity.CosmosDb;
 
 public class CosmosDbUserStore : CosmosOwnedItemRepository<IdentityUser>, 
     IUserStore<IdentityUser>,
-    IUserPasswordStore<IdentityUser>
+    IUserPasswordStore<IdentityUser>,
+    IUserEmailStore<IdentityUser>
 {
     public CosmosDbUserStore(
        IOptions<CosmosRepositoryOptions<IdentityUser>> options,
@@ -36,6 +37,17 @@ public class CosmosDbUserStore : CosmosOwnedItemRepository<IdentityUser>,
         
     }
 
+    public async Task<IdentityUser?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+    {
+        var query = await GetQueryable();
+
+        var queryable = query.Queryable.Where(x => x.NormalizedEmail == normalizedEmail);
+
+        var results = await GetResults(queryable, GetQueryDescription(), query.PartitionKey);
+
+        return results.FirstOrDefault();
+    }
+
     public async Task<IdentityUser?> FindByIdAsync(
         string userId, CancellationToken cancellationToken)
     {
@@ -52,6 +64,21 @@ public class CosmosDbUserStore : CosmosOwnedItemRepository<IdentityUser>,
         var results = await GetResults(queryable, GetQueryDescription(), query.PartitionKey);
 
         return results.FirstOrDefault();
+    }
+
+    public Task<string?> GetEmailAsync(IdentityUser user, CancellationToken cancellationToken)
+    {
+        return Task.FromResult<string?>(user.Email);
+    }
+
+    public Task<bool> GetEmailConfirmedAsync(IdentityUser user, CancellationToken cancellationToken)
+    {
+        return Task.FromResult<bool>(user.EmailConfirmed);
+    }
+
+    public Task<string?> GetNormalizedEmailAsync(IdentityUser user, CancellationToken cancellationToken)
+    {
+        return Task.FromResult<string?>(user.NormalizedEmail);
     }
 
     public Task<string?> GetNormalizedUserNameAsync(IdentityUser user, CancellationToken cancellationToken)
@@ -79,6 +106,35 @@ public class CosmosDbUserStore : CosmosOwnedItemRepository<IdentityUser>,
         var hasPassword = string.IsNullOrEmpty(user.PasswordHash) == false;
 
         return Task.FromResult<bool>(hasPassword);
+    }
+
+    public Task SetEmailAsync(IdentityUser user, string? email, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(email))
+        {
+            throw new ArgumentException($"{nameof(email)} is null or empty.", nameof(email));
+        }
+
+        user.Email = email;
+
+        return Task.CompletedTask;
+    }
+
+    public Task SetEmailConfirmedAsync(IdentityUser user, bool confirmed, CancellationToken cancellationToken)
+    {
+        user.EmailConfirmed = confirmed;
+
+        return Task.CompletedTask;
+    }
+
+    public Task SetNormalizedEmailAsync(IdentityUser user, string? normalizedEmail, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(normalizedEmail))
+        {
+            throw new ArgumentException($"{nameof(normalizedEmail)} is null or empty.", nameof(normalizedEmail));
+        }
+
+        return Task.CompletedTask;
     }
 
     public Task SetNormalizedUserNameAsync(IdentityUser user, string? normalizedName, CancellationToken cancellationToken)
