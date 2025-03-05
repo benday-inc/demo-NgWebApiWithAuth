@@ -77,7 +77,7 @@ public class ConfigurationHelper
         })
         .AddDefaultUI()
         .AddDefaultTokenProviders();
-
+                
         _Builder.Services.AddRazorPages();
 
         var jwtConfig = GetJwtConfiguration();
