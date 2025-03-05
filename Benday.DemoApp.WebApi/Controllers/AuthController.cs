@@ -66,6 +66,7 @@ public class AuthController : ControllerBase
         }
 
         var token = GenerateJwtToken(user);
+
         return Ok(new { token });
     }
 
