@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-//using IdentityRole = Cosmos.Identity.IdentityRole;
-//using IdentityUser = Cosmos.Identity.IdentityUser;
+using IdentityRole = Benday.Identity.CosmosDb.IdentityRole;
+using IdentityUser = Benday.Identity.CosmosDb.IdentityUser;
 
 
 namespace Benday.DemoApp.WebApi.Controllers;
@@ -36,8 +36,6 @@ public class AuthController : ControllerBase
         try
         {
             var user = new IdentityUser { UserName = model.Email, Email = model.Email };
-
-
 
             var validationContext = new ValidationContext(user);
             var results = new List<ValidationResult>();

@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Benday.CosmosDb" Version="4.1.1" />
+    <PackageReference Include="Benday.CosmosDb" Version="4.2.0" />
   </ItemGroup>
 
 </Project>

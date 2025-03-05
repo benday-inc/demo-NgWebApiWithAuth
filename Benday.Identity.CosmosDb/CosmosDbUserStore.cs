@@ -75,13 +75,20 @@ public class CosmosDbUserStore : CosmosOwnedItemRepository<IdentityUser>,
     public async Task<IdentityUser?> FindByNameAsync(
         string normalizedUserName, CancellationToken cancellationToken)
     {
-        var query = await GetQueryable();
+        try
+        {
+            var query = await GetQueryable();
 
-        var queryable = query.Queryable.Where(x => x.NormalizedUserName == normalizedUserName);
+            var queryable = query.Queryable.Where(x => x.NormalizedUserName == normalizedUserName);
 
-        var results = await GetResults(queryable, GetQueryDescription(), query.PartitionKey);
+            var results = await GetResults(queryable, GetQueryDescription(), query.PartitionKey);
 
-        return results.FirstOrDefault();
+            return results.FirstOrDefault();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public Task<string?> GetEmailAsync(IdentityUser user, CancellationToken cancellationToken)
