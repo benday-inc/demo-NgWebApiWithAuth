@@ -16,6 +16,12 @@ export class SecuredPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.refresh();
+  }
+
+  public refresh() {
+    this.message = ApplicationConstants.defaultString;
+    
     this.service.getProtectedData().subscribe({
       next: (response) => {
         console.log(response);

@@ -1,36 +1,45 @@
-import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpHandlerFn } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { getBaseUrl } from '../main';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  constructor(private router: Router) {}
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Get token from localStorage
-    const token = localStorage.getItem('token');
+export function authInterceptorFn(
+  req: HttpRequest<unknown>, 
+  next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
+  console.log(`authInterceptorFn: ${req.url}`);
 
-    // Clone request and attach token if available
-    let authReq = req;
-    if (token) {
-      authReq = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-    }
+  let router = inject(Router);
+  
+  let url = req.url;
 
-    return next.handle(authReq).pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          // Handle 401 Unauthorized (e.g., token expired)
-          localStorage.removeItem('token');  // Remove invalid token
-          this.router.navigate(['/login']); // Redirect to login page
-        }
-        return throwError(error);
-      })
-    );
+  if (url.startsWith('/')) {
+    url = getBaseUrl() + url;
   }
+  else if (!url.startsWith('http')) {
+    url = getBaseUrl() + '/' + url;
+  }
+
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    console.log('authInterceptorFn: Adding Authorization header');
+    req = req.clone({
+      url: url,
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+  else {
+    console.log('authInterceptorFn: No token found');
+    req = req.clone({
+      url: url
+    });
+  }
+ 
+  return next(req);
 }
+
