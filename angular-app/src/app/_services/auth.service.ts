@@ -19,14 +19,23 @@ export class AuthService extends GenericService<AuthRequestResponse> {
     return '/api/auth';
   }
 
-  public login(user: { email: string; password: string }) {
+  public login(username: string, password: string) {
     let data = new AuthRequestResponse();
-    data.email = user.email;
-    data.password = user.password;
+    data.email = username;
+    data.password = password;
     return this.http.post<AuthRequestResponse>(`${this.endpoint}/login`, data).pipe(
       tap(response => {
         localStorage.setItem('token', response.token); // Store the token
       }),
+      catchError(err => CommonUtilities.handleHttpError<AuthRequestResponse>(err))
+    );
+  } 
+
+  public register(username: string, password: string) {
+    let data = new AuthRequestResponse();
+    data.email = username;
+    data.password = password;
+    return this.http.post<AuthRequestResponse>(`${this.endpoint}/register`, data).pipe(
       catchError(err => CommonUtilities.handleHttpError<AuthRequestResponse>(err))
     );
   } 
