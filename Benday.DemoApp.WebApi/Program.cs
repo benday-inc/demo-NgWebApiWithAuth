@@ -19,6 +19,27 @@ public class Program
 
         var helper = new ConfigurationHelper(builder);
 
+        // use cors
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+
+                    builder.WithOrigins("https://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+
+                    // NOTE: add your production URL here
+                    // builder.WithOrigins("https://yourdomain.com")
+                    //     .AllowAnyHeader()
+                    //     .AllowAnyMethod();
+                });
+        });
+
         builder.Services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo
@@ -32,6 +53,8 @@ public class Program
         helper.ConfigureServices();
 
         var app = builder.Build();
+
+        app.UseCors();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
