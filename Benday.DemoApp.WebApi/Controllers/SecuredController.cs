@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Benday.DemoApp.WebApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -10,10 +11,12 @@ public class SecuredController : ControllerBase
 {
     [Authorize]
     [HttpGet("protected")]
-    public IActionResult GetProtectedData()
+    public ActionResult<GetMessageResponse> GetProtectedData()
     {
-        return Ok(new { 
-            message = $"You have accessed a protected endpoint! {DateTime.Now.Ticks}" 
-        });
+        var response = new GetMessageResponse();
+
+        response.Message = $"You have accessed a protected endpoint! {DateTime.Now.Ticks}";
+
+        return Ok(response);
     }
 }
