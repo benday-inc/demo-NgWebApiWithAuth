@@ -39,7 +39,15 @@ export function authInterceptorFn(
       url: url
     });
   }
- 
-  return next(req);
-}
+
+  // detect if request fails with 401
+  return next(req).pipe(
+    catchError((err: HttpErrorResponse) => {
+      if (err.status === 401) {
+        console.log('authInterceptorFn: 401 detected');
+        router.navigate(['/login']);
+      }
+      return throwError(err);
+    })
+  );}
 
