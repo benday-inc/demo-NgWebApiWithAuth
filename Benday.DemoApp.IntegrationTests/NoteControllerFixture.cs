@@ -3,15 +3,22 @@ using Benday.DemoApp.WebApi;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Text.Json;
+using Xunit.Abstractions;
 
 namespace Benday.DemoApp.IntegrationTests;
-public class NoteControllerFixture
+
+public class NoteControllerFixture : TestClassBase
 {
+    public NoteControllerFixture(ITestOutputHelper output) : base(output)
+    {
+
+    }
+    
     [Fact]
     public async Task Index_Get_WithOwnerId_ReturnsSuccess()
     {
         // arrange
-        var factory = new WebApplicationFactory<MarkerClassForTesting>();
+        using var factory = new WebApplicationFactory<MarkerClassForTesting>();
 
         var client = factory.CreateClient();
 
@@ -27,19 +34,26 @@ public class NoteControllerFixture
 
         if (response.IsSuccessStatusCode == false)
         {
+
+            WriteLine(content);
             TestUtilities.CheckForDependencyError(content);
+            Assert.Fail();
         }
+        else
+        {
+            WriteLine(content);
 
-        var notes = JsonSerializer.Deserialize<List<Note>>(content);
+            var notes = JsonSerializer.Deserialize<List<Note>>(content);
 
-        Assert.True(response.IsSuccessStatusCode);
+            Assert.True(response.IsSuccessStatusCode);
+        }        
     }
 
     [Fact]
     public async Task Index_Post_NewNote()
     {
         // arrange
-        var factory = new WebApplicationFactory<MarkerClassForTesting>();
+        using var factory = new WebApplicationFactory<MarkerClassForTesting>();
 
         var client = factory.CreateClient();
 

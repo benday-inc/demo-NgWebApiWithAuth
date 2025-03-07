@@ -1,6 +1,6 @@
 ﻿using Benday.CosmosDb.ServiceLayers;
+using Benday.CosmosDb.Utilities;
 using Benday.DemoApp.Api;
-using Cosmos.Abstracts.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Benday.DemoApp.WebApi.Controllers;
@@ -10,9 +10,9 @@ namespace Benday.DemoApp.WebApi.Controllers;
 [ApiController]
 public class NoteController : ControllerBase
 {
-    private readonly IOwnedItemServiceBase<Note> _NoteService;
+    private readonly IOwnedItemService<Note> _NoteService;
 
-    public NoteController(IOwnedItemServiceBase<Note> noteService)
+    public NoteController(IOwnedItemService<Note> noteService)
     {
         _NoteService = noteService;
     }

@@ -1,13 +1,14 @@
-﻿using Benday.DemoApp.WebApi.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Benday.DemoApp.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using IdentityRole = Cosmos.Identity.IdentityRole;
-using IdentityUser = Cosmos.Identity.IdentityUser;
+using IdentityRole = Benday.Identity.CosmosDb.IdentityRole;
+using IdentityUser = Benday.Identity.CosmosDb.IdentityUser;
 
 
 namespace Benday.DemoApp.WebApi.Controllers;
@@ -20,8 +21,8 @@ public class AuthController : ControllerBase
     private readonly SignInManager<IdentityUser> _SignInManager;
     private readonly IConfiguration _Configuration;
 
-    public AuthController(UserManager<IdentityUser> userManager, 
-        SignInManager<IdentityUser> signInManager, 
+    public AuthController(UserManager<IdentityUser> userManager,
+        SignInManager<IdentityUser> signInManager,
         IConfiguration configuration)
     {
         _UserManager = userManager;
@@ -32,14 +33,27 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
-        var user = new IdentityUser { UserName = model.Email, Email = model.Email };
-        var result = await _UserManager.CreateAsync(user, model.Password);
-
-        if (result.Succeeded)
+        try
         {
-            return Ok(new { message = "User registered successfully!" });
+            var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+
+            var validationContext = new ValidationContext(user);
+            var results = new List<ValidationResult>();
+            Validator.TryValidateObject(user, validationContext, results, true);
+
+
+            var result = await _UserManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { message = "User registered successfully!" });
+            }
+            return BadRequest(result.Errors);
         }
-        return BadRequest(result.Errors);
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPost("login")]
@@ -52,6 +66,7 @@ public class AuthController : ControllerBase
         }
 
         var token = GenerateJwtToken(user);
+
         return Ok(new { token });
     }
 
@@ -71,7 +86,7 @@ public class AuthController : ControllerBase
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

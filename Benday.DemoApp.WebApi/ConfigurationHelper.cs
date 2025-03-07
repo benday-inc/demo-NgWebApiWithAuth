@@ -1,13 +1,13 @@
 ﻿
 using Benday.CosmosDb.Utilities;
 using Benday.DemoApp.Api;
-using Cosmos.Identity;
+using Benday.Identity.CosmosDb;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using IdentityRole = Cosmos.Identity.IdentityRole;
-using IdentityUser = Cosmos.Identity.IdentityUser;
+using IdentityRole = Benday.Identity.CosmosDb.IdentityRole;
+using IdentityUser = Benday.Identity.CosmosDb.IdentityUser;
 
 namespace Benday.DemoApp.WebApi;
 
@@ -29,18 +29,40 @@ public class ConfigurationHelper
 
         helper.RegisterRepositoryAndService<Note>();
     }
+
+    private CosmosRegistrationHelper? _CosmosHelper;
+
+    private CosmosRegistrationHelper CosmosHelper
+    {
+        get
+        {
+            if (_CosmosHelper == null)
+            {
+                var cosmosConfig = _Builder.Configuration.GetCosmosConfig();
+
+                var helper = new CosmosRegistrationHelper(
+                    _Builder.Services, cosmosConfig);
+
+                _CosmosHelper = helper;
+            }
+
+            return _CosmosHelper;
+        }
+    }
+
+
+
     /// <summary>
     /// Configures ASP.NET Core Identity
     /// </summary>
     public void ConfigureIdentity()
     {
-        var cosmosConfig = _Builder.Configuration.GetCosmosConfig();
+        CosmosHelper.RegisterRepository<IdentityUser, IUserStore<IdentityUser>, CosmosDbUserStore>();
+        CosmosHelper.RegisterRepository<IdentityUser, IUserPasswordStore<IdentityUser>, CosmosDbUserStore>();
+        CosmosHelper.RegisterRepository<IdentityUser, IUserEmailStore<IdentityUser>, CosmosDbUserStore>();
+        CosmosHelper.RegisterRepository<IdentityUser, IUserRoleStore<IdentityUser>, CosmosDbUserStore>();
+        CosmosHelper.RegisterRepository<IdentityUser, IRoleStore<IdentityRole>, CosmosDbRoleStore>();
 
-        _Builder.Services.AddCosmosRepository(setup =>
-        {
-            setup.ConnectionString = cosmosConfig.ConnectionString;
-            setup.DatabaseId = cosmosConfig.DatabaseName;
-        });
 
         _Builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
         {
@@ -53,10 +75,9 @@ public class ConfigurationHelper
             options.Password.RequiredUniqueChars = 0;
             options.User.RequireUniqueEmail = true;
         })
-            .AddCosmosStores()
-            .AddDefaultUI()
-            .AddDefaultTokenProviders();
-
+        .AddDefaultUI()
+        .AddDefaultTokenProviders();
+                
         _Builder.Services.AddRazorPages();
 
         var jwtConfig = GetJwtConfiguration();

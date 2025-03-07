@@ -1,5 +1,7 @@
 using Benday.DemoApp.WebApi;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 public class Program
 {
@@ -7,17 +9,43 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Configuration.AddJsonFile("appsettings.json");
+        builder.Configuration.AddJsonFile("appsettings.Development.json", optional: true);
+        builder.Configuration.AddJsonFile("appsettings.unversioned.json", optional: true);
+
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
         var helper = new ConfigurationHelper(builder);
 
+        // use cors
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+
+                    builder.WithOrigins("https://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+
+                    // NOTE: add your production URL here
+                    // builder.WithOrigins("https://yourdomain.com")
+                    //     .AllowAnyHeader()
+                    //     .AllowAnyMethod();
+                });
+        });
+
         builder.Services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { 
-                Title = "Benday Demo API", 
-                Version = "v1"                
+            c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "Benday Demo API",
+                Version = "v1"
             });
         });
 
@@ -25,6 +53,8 @@ public class Program
         helper.ConfigureServices();
 
         var app = builder.Build();
+
+        app.UseCors();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -65,6 +95,11 @@ public class Program
         app.Run();
     }
 }
+//var connectionString = builder.Configuration.GetConnectionString("IdentityDataContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityDataContextConnection' not found.");;
+
+//builder.Services.AddDbContext<IdentityDataContext>(options => options.UseSqlServer(connectionString));
+
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<IdentityDataContext>();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
