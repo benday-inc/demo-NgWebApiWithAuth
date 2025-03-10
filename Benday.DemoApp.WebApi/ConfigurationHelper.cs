@@ -28,6 +28,7 @@ public class ConfigurationHelper
             _Builder.Services, cosmosConfig);
 
         helper.RegisterRepositoryAndService<Note>();
+        helper.RegisterRepositoryAndService<IdentityUser>();
     }
 
     private CosmosRegistrationHelper? _CosmosHelper;
