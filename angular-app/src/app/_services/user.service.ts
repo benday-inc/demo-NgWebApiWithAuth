@@ -15,6 +15,6 @@ export class UserService extends GenericService<User> {
   }
 
   get endpoint(): string {
-    return '/api/user';
+    return '/api/identityuser';
   }
 }

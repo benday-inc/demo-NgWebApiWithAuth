@@ -18,8 +18,8 @@ public class IdentityUserController : ControllerBase
         _Service = service;
     }
 
-    [HttpGet("{ownerId}")]
-    public async Task<ActionResult<List<IdentityUser>>> GetAll(
+    [HttpGet("getallbyownerid/{ownerId}")]
+    public async Task<ActionResult<List<IdentityUser>>> GetAllByOwnerId(
         [FromRoute]string ownerId)
     {
         if (ownerId.IsNullOrWhiteSpace() == true)
