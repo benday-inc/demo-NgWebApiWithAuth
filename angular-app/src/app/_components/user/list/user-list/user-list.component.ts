@@ -50,7 +50,7 @@ export class UserListComponent implements OnInit {
   }
 
   rowClicked(event: MouseEvent, item: User) {
-    const url = `/User/detail/${item.ownerId}/${item.id}`;
+    const url = `/user/detail/${item.ownerId}/${item.id}`;
 
     console.log('Navigating to ' + url);
 

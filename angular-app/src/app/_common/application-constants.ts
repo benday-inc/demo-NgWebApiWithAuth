@@ -20,4 +20,5 @@ export class ApplicationConstants {
     static defaultNumberOfResults = 100;
     static sortDirectionAscending = 'ascending';
     static sortDirectionDescending = 'descending';
+    public static claimTypeRole = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role';
 }
