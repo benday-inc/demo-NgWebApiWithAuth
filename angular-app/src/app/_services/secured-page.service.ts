@@ -31,4 +31,15 @@ export class SecuredPageService extends GenericService<GetMessageResponse> {
       );
   }
 
+  getProtectedAdminData(): Observable<GetMessageResponse> {
+    const url = `${this.endpoint}/protected-admin`;
+
+    console.log(`GET ${url}`);
+
+    return this.http.get<GetMessageResponse>(
+      url).pipe(
+        catchError(err => CommonUtilities.handleHttpError<GetMessageResponse>(err))
+      );
+  }
+
 }

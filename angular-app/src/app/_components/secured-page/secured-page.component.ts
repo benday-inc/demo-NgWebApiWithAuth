@@ -33,4 +33,19 @@ export class SecuredPageComponent implements OnInit {
       }
     });
   }
+
+  public refreshAdmin() {
+    this.message = ApplicationConstants.defaultString;
+    
+    this.service.getProtectedAdminData().subscribe({
+      next: (response) => {
+        console.log(response);
+        this.message = response.message;
+      },
+      error: (err) => {
+        console.error(err);
+        this.message = CommonUtilities.formatErrorMessage(err);
+      }
+    });
+  }
 }
