@@ -26,13 +26,14 @@
         </div>
 
         <div *ngFor="let claim of theForm.controls.claims.controls; let i = index" 
+            [formGroupName]="i"
             class="row mb-3">
             <div class="col">
-                <input type="text" formControlName="value.claimType" />
+                <input type="text" formControlName="claimType" />
                 <a (click)="setClaimTypeToRole(i)" class="btn btn-link">set to role</a>
             </div>
             <div class="col">
-                <input type="text" formControlName="value.claimValue" />
+                <input type="text" formControlName="claimValue" />
             </div>
 
             <div class="col">

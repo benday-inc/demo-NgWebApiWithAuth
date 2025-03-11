@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../../_services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -22,7 +22,10 @@ export class UserDetailComponent implements OnInit {
 
   theForm = this.formBuilder.nonNullable.group({
     username: ['', Validators.required],
-    claims: this.formBuilder.nonNullable.array<UserClaim>([])
+    claims: this.formBuilder.nonNullable.array<FormGroup<{
+      claimType: FormControl<string>;
+      claimValue: FormControl<string>
+    }>>([])
   });
 
   constructor(
@@ -57,10 +60,10 @@ export class UserDetailComponent implements OnInit {
 
   public addClaim() {
     let newClaim = new UserClaim();
-    let temp = new FormControl<UserClaim>(newClaim, { nonNullable: true });
-    if (temp !== null) {
-      this.theForm.controls.claims.push(temp);
-    }
+    this.theForm.controls.claims.push(this.formBuilder.nonNullable.group({
+      claimType: this.formBuilder.nonNullable.control(newClaim.claimType, Validators.required),
+      claimValue: this.formBuilder.nonNullable.control(newClaim.claimValue, Validators.required)
+    }));
   }
 
   public removeClaim(index: number) {
