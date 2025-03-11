@@ -34,4 +34,14 @@ export abstract class GenericService<T> {
         catchError(err => CommonUtilities.handleHttpError<T | null>(err))
       );
   }
+
+  save(ownerId: string, item: T): Observable<T> {
+    const url = `${this.endpoint}/${ownerId}`;
+
+    console.log(`save(): url=${url}`);
+
+    return this.http.post<T>(url, item).pipe(
+      catchError(err => CommonUtilities.handleHttpError<T>(err))
+    );
+  }
 }

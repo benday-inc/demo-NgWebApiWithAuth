@@ -110,4 +110,42 @@ export class UserDetailComponent implements OnInit {
       return returnValue;
     }
   }
+
+  public save() {
+    const ownerId = this.getRouteValue('ownerId');
+    const id = this.getRouteValue('id');
+
+    let user = new User();
+    user.id = id;
+    user.email = this.theForm.controls.username.value;
+    user.claims = this.getUserClaims();
+
+    this.service.save(ownerId, user).subscribe({
+      next: (result) => {
+        this.router.navigate(['/user']);
+      },
+      error: (error) => {
+        console.error(error);
+        this.message = error.message;
+      }
+    });
+  }
+
+  private getUserClaims(): UserClaim[] {
+    var claims: UserClaim[] = [];
+
+    this.theForm.controls.claims.controls.forEach((control) => {
+      let claim = new UserClaim();
+      claim.claimType = control.controls.claimType.value;
+      claim.claimValue = control.controls.claimValue.value;
+
+      claims.push(claim);
+    });
+
+    return claims;
+  }
+
+  public cancel() {
+    this.router.navigate(['/user']);
+  }
 }

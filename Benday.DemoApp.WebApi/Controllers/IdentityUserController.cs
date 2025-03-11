@@ -14,7 +14,8 @@ public class IdentityUserController : ControllerBase
 {
     private readonly IOwnedItemService<IdentityUser> _Service;
 
-    public IdentityUserController(IOwnedItemService<IdentityUser> service)
+    public IdentityUserController(
+        IOwnedItemService<IdentityUser> service)
     {
         _Service = service;
     }
