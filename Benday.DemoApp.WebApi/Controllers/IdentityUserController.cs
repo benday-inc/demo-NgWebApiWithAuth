@@ -15,14 +15,14 @@ namespace Benday.DemoApp.WebApi.Controllers;
 [ApiController]
 public class IdentityUserController : ControllerBase
 {
-    private readonly IOwnedItemService<IdentityUser> _Service;
+    private readonly ICosmosDbUserStore _UserStore;
     private readonly IRoleClaimStore<IdentityRole> _RoleClaimStore;
 
     public IdentityUserController(
-        IOwnedItemService<IdentityUser> service,
+        ICosmosDbUserStore service,
         IRoleClaimStore<IdentityRole> roleClaimStore)
     {
-        _Service = service;
+        _UserStore = service;
         _RoleClaimStore = roleClaimStore;
     }
 
@@ -35,7 +35,7 @@ public class IdentityUserController : ControllerBase
             return BadRequest("OwnerId cannot be blank");
         }
 
-        var results = await _Service.GetAllAsync(ownerId);
+        var results = await _UserStore.GetAllAsync(ownerId);
 
         return Ok(results);
     }
@@ -54,7 +54,7 @@ public class IdentityUserController : ControllerBase
             return BadRequest("Id cannot be null or blank");
         }
 
-        var results = await _Service.GetByIdAsync(ownerId, id);
+        var results = await _UserStore.GetByIdAsync(ownerId, id);
 
         if (results == null)
         {
@@ -62,6 +62,8 @@ public class IdentityUserController : ControllerBase
         }
         else
         {
+            var roles = await _UserStore.GetRolesAsync(results, new CancellationToken());
+
             return Ok(results);
         }
     }
@@ -86,19 +88,20 @@ public class IdentityUserController : ControllerBase
         else
         {
             // reload a fresh copy from cosmos
-            var toModel = await _Service.GetByIdAsync(value.OwnerId, value.Id);
+            var toModel = await _UserStore.GetByIdAsync(value.OwnerId, value.Id);
 
             if (toModel == null)
             {
                 return BadRequest("Could not find user in database.");
             }
 
-            UpdateClaims(value, toModel);
-
             await VerifyRolesExist(toModel);
 
-            await _Service.SaveAsync(toModel);            
-            
+            await UpdateClaims(value, toModel);
+
+            // await _UserStore.SaveAsync(toModel);
+            await _UserStore.UpdateAsync(toModel, new CancellationToken());
+
             return Ok(toModel);
         }
     }
@@ -119,10 +122,10 @@ public class IdentityUserController : ControllerBase
 
                 await _RoleClaimStore.UpdateAsync(existingRole, CancellationToken.None);
             }
-        }        
+        }
     }
 
-    private void UpdateClaims(IdentityUser fromValue, IdentityUser toValue)
+    private async Task UpdateClaims(IdentityUser fromValue, IdentityUser toValue)
     {
         // claims from the request
         var fromClaims = fromValue.Claims;
@@ -134,7 +137,7 @@ public class IdentityUserController : ControllerBase
         {
             if (ClaimExists(toClaims, fromClaim) == false)
             {
-                toClaims.Add(fromClaim);
+                await _UserStore.AddToRoleAsync(toValue, fromClaim.ClaimValue, CancellationToken.None);
             }
         }
 
@@ -150,21 +153,25 @@ public class IdentityUserController : ControllerBase
 
         if (removeThese.Count > 0)
         {
-            removeThese.ForEach(c => toClaims.Remove(c));
+            foreach (var removeThis in removeThese)
+            {
+                toClaims.Remove(removeThis);
+                await _UserStore.RemoveFromRoleAsync(toValue, removeThis.ClaimValue, CancellationToken.None);
+            }            
         }
     }
 
     private bool ClaimExists(List<IdentityUserClaim> claims, IdentityUserClaim search)
     {
-        var match = claims.Where(c => 
-            c.ClaimType == search.ClaimType && 
+        var match = claims.Where(c =>
+            c.ClaimType == search.ClaimType &&
             c.ClaimValue == search.ClaimValue).FirstOrDefault();
 
         if (match == null)
         {
             return false;
         }
-        else 
+        else
         {
             return true;
         }

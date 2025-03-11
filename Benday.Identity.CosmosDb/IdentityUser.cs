@@ -33,7 +33,7 @@ namespace Benday.Identity.CosmosDb
         public string SecurityStamp { get; set; } = Guid.NewGuid().ToString();
         public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
 
-        public List<IdentityUserClaim> Claims { get; set; } = new List<IdentityUserClaim>();
+        public List<IdentityUserClaim> Claims { get; set; } = new List<IdentityUserClaim>();        
     }
 }
 

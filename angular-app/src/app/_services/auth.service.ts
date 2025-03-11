@@ -19,6 +19,13 @@ export class AuthService extends GenericService<AuthRequestResponse> {
     return '/api/auth';
   }
 
+  public logout() {
+    localStorage.removeItem('token');
+    return this.http.post(`${this.endpoint}/logout`, null).pipe(
+      catchError(err => CommonUtilities.handleHttpError(err))
+    );
+  }
+
   public login(username: string, password: string) {
     let data = new AuthRequestResponse();
     data.email = username;

@@ -56,6 +56,13 @@ public class AuthController : ControllerBase
         }
     }
 
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _SignInManager.SignOutAsync();
+        return Ok(new { message = "User logged out successfully!" });
+    }
+
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
@@ -83,12 +90,17 @@ public class AuthController : ControllerBase
 
     private string GenerateJwtToken(IdentityUser user)
     {
-        var claims = new[]
+        var claims = new List<Claim>()
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
+
+        user.Claims.ForEach(claim =>
+        {
+            claims.Add(new Claim(claim.ClaimType, claim.ClaimValue));
+        });
 
         var config = GetJwtConfiguration();
 

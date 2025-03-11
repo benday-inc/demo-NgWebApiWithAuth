@@ -30,6 +30,7 @@ public class ConfigurationHelper
         helper.RegisterRepositoryAndService<Note>();
         helper.RegisterRepositoryAndService<IdentityUser>();
         helper.RegisterRepositoryAndService<IdentityRole>();
+        helper.RegisterRepository<IdentityUser, ICosmosDbUserStore, CosmosDbUserStore>();
     }
 
     private CosmosRegistrationHelper? _CosmosHelper;
@@ -63,9 +64,11 @@ public class ConfigurationHelper
         CosmosHelper.RegisterRepository<IdentityUser, IUserPasswordStore<IdentityUser>, CosmosDbUserStore>();
         CosmosHelper.RegisterRepository<IdentityUser, IUserEmailStore<IdentityUser>, CosmosDbUserStore>();
         CosmosHelper.RegisterRepository<IdentityUser, IUserRoleStore<IdentityUser>, CosmosDbUserStore>();
+        CosmosHelper.RegisterRepository<IdentityUser, ICosmosDbUserStore, CosmosDbUserStore>();
         CosmosHelper.RegisterRepository<IdentityUser, IRoleStore<IdentityRole>, CosmosDbRoleStore>();
         CosmosHelper.RegisterRepository<IdentityUser, IRoleClaimStore<IdentityRole>, CosmosDbRoleStore>();
 
+        _Builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, IdentityUserClaimsPrincipalFactory>();
 
         _Builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
         {
