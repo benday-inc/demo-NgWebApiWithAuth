@@ -12,9 +12,19 @@
             <li class="nav-item">
                 <a class="nav-link" [routerLink]="['/secured']">Secured Page</a>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                <a class="nav-link" [routerLink]="['/user', 'list']">Users</a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/login']">Login</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/logout']">Logout</a>
+            </li>
+            
         </ul>
     </div>
 </nav>

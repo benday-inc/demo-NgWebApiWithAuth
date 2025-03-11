@@ -482,3 +482,5 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+angular-app/__azurite_db_table__.json
+angular-app/AzuriteConfig

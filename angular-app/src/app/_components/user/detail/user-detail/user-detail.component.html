@@ -1,0 +1,56 @@
+<form [formGroup]="theForm" class="form-group">
+    <div *ngIf="message !== ''" class="alert alert-primary">{{message}}
+    </div>
+
+
+    <div class="form-group mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input id="username" formControlName="username" type="text" class="form-control" />
+    </div>
+
+    <div formArrayName="claims">
+        <div class="row">
+            <div class="col">
+                <b>Claim Type</b>
+            </div>
+            <div class="col">
+                <b>Claim Value</b>
+            </div>
+            <div class="col">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class="row mb-3 mt-3" *ngIf="theForm.controls.claims.controls.length === 0">
+            <i>(user has no claims)</i>
+        </div>
+
+        <div *ngFor="let claim of theForm.controls.claims.controls; let i = index" 
+            [formGroupName]="i"
+            class="row mb-3">
+            <div class="col">
+                <input type="text" formControlName="claimType" />
+                <a (click)="setClaimTypeToRole(i)" class="btn btn-link">set to role</a>
+            </div>
+            <div class="col">
+                <input type="text" formControlName="claimValue" />
+            </div>
+
+            <div class="col">
+                <a (click)="removeClaim(i)" class="btn btn-link">remove</a>
+            </div>
+        </div>        
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <a (click)="addClaim()" class="btn btn-info">add claim</a>
+        </div>        
+    </div>
+
+    <div class="btn-toolbar mb-3 mt-3" role="toolbar">
+
+        <button class="btn btn-primary mx-2" (click)="save()">Save</button>
+        <button class="btn btn-secondary mx-2" (click)="cancel()">Cancel</button>
+        
+    </div>
+</form>

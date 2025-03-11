@@ -19,4 +19,15 @@ public class SecuredController : ControllerBase
 
         return Ok(response);
     }
+
+    [Authorize(Roles = "administrator")]
+    [HttpGet("protected-admin")]
+    public ActionResult<GetMessageResponse> GetAdminOnlyProtectedData()
+    {
+        var response = new GetMessageResponse();
+
+        response.Message = $"You have accessed a protected endpoint and get admin only data! {DateTime.Now.Ticks}";
+
+        return Ok(response);
+    }
 }

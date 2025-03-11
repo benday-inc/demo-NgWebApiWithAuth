@@ -11,7 +11,8 @@ public class CosmosDbUserStore : CosmosOwnedItemRepository<IdentityUser>,
     IUserStore<IdentityUser>,
     IUserPasswordStore<IdentityUser>,
     IUserEmailStore<IdentityUser>,
-    IUserRoleStore<IdentityUser>
+    IUserRoleStore<IdentityUser>, 
+    ICosmosDbUserStore
 {
     public CosmosDbUserStore(
        IOptions<CosmosRepositoryOptions<IdentityUser>> options,
