@@ -95,7 +95,12 @@ export class UserDetailComponent implements OnInit {
   private afterLoad(result: User) {
     this.theForm.controls.username.setValue(result.email);
 
-    this.theForm.controls.claims.setValue(result.claims)
+    result.claims.forEach((claim) => {
+      this.theForm.controls.claims.push(this.formBuilder.nonNullable.group({
+        claimType: this.formBuilder.nonNullable.control(claim.claimType, Validators.required),
+        claimValue: this.formBuilder.nonNullable.control(claim.claimValue, Validators.required)
+      }));
+    });
   }
 
   getRouteValue(valueName: string): string {
@@ -146,6 +151,6 @@ export class UserDetailComponent implements OnInit {
   }
 
   public cancel() {
-    this.router.navigate(['/user']);
+    this.router.navigate(['/user/list']);
   }
 }

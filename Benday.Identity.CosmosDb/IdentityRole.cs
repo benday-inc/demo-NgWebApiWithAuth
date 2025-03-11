@@ -20,6 +20,9 @@ namespace Benday.Identity.CosmosDb
         }
 
         public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
+
+        public List<IdentityClaim> Claims { get; set; } = new List<IdentityClaim>();
+    
     }
 }
 

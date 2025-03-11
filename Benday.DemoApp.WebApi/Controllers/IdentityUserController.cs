@@ -3,7 +3,10 @@ using Benday.CosmosDb.ServiceLayers;
 using Benday.CosmosDb.Utilities;
 using Benday.DemoApp.Api;
 using Benday.Identity.CosmosDb;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using IdentityRole = Benday.Identity.CosmosDb.IdentityRole;
+using IdentityUser = Benday.Identity.CosmosDb.IdentityUser;
 
 namespace Benday.DemoApp.WebApi.Controllers;
 
@@ -13,11 +16,14 @@ namespace Benday.DemoApp.WebApi.Controllers;
 public class IdentityUserController : ControllerBase
 {
     private readonly IOwnedItemService<IdentityUser> _Service;
+    private readonly IRoleClaimStore<IdentityRole> _RoleClaimStore;
 
     public IdentityUserController(
-        IOwnedItemService<IdentityUser> service)
+        IOwnedItemService<IdentityUser> service,
+        IRoleClaimStore<IdentityRole> roleClaimStore)
     {
         _Service = service;
+        _RoleClaimStore = roleClaimStore;
     }
 
     [HttpGet("getallbyownerid/{ownerId}")]
@@ -89,10 +95,31 @@ public class IdentityUserController : ControllerBase
 
             UpdateClaims(value, toModel);
 
+            await VerifyRolesExist(toModel);
+
             await _Service.SaveAsync(toModel);            
             
             return Ok(toModel);
         }
+    }
+
+    private async Task VerifyRolesExist(IdentityUser toModel)
+    {
+        foreach (var role in toModel.Claims.Where(c => c.ClaimType == ClaimTypes.Role))
+        {
+            var existingRole = await _RoleClaimStore.FindByNameAsync(role.ClaimValue, CancellationToken.None);
+
+            if (existingRole == null)
+            {
+                existingRole = new IdentityRole();
+                existingRole.Name = role.ClaimValue;
+                existingRole.NormalizedName = role.ClaimValue.ToUpper();
+
+                existingRole.AddClaim(new Claim(ClaimTypes.Role, role.ClaimValue));
+
+                await _RoleClaimStore.UpdateAsync(existingRole, CancellationToken.None);
+            }
+        }        
     }
 
     private void UpdateClaims(IdentityUser fromValue, IdentityUser toValue)
