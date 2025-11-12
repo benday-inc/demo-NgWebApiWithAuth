@@ -1,7 +1,7 @@
 using Benday.DemoApp.WebApi;
-using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 
 public class Program
 {
