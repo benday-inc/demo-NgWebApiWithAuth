@@ -76,6 +76,17 @@ export class UserDetailComponent implements OnInit {
     }
   }
 
+  public addClaimForAdminRole() {
+    let newClaim = new UserClaim();
+    newClaim.claimType = ApplicationConstants.claimTypeRole;
+    newClaim.claimValue = "administrator";
+
+    this.theForm.controls.claims.push(this.formBuilder.nonNullable.group({
+      claimType: this.formBuilder.nonNullable.control(newClaim.claimType, Validators.required),
+      claimValue: this.formBuilder.nonNullable.control(newClaim.claimValue, Validators.required)
+    }));
+  }
+
   public setClaimTypeToRole(index: number) {
     if (this.theForm.controls.claims.controls.length == 0 ||
       this.theForm.controls.claims.controls.length < index) {
@@ -127,7 +138,7 @@ export class UserDetailComponent implements OnInit {
 
     this.service.save(ownerId, user).subscribe({
       next: (result) => {
-        this.router.navigate(['/user']);
+        this.router.navigate(['/user/list']);
       },
       error: (error) => {
         console.error(error);
