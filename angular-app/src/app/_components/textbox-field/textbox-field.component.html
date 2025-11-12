@@ -3,26 +3,35 @@
         <label class="form-label" for="textbox1">{{displayName}}: </label>
         <input id="textbox1" class="form-control" type="text" formControlName="{{controlName}}"
             placeholder="{{displayName}}" (ngModelChange)="valueChanged($event)">
-        <div *ngIf="parentForm.controls[controlName].enabled === true && !parentForm.controls[controlName].valid"
-            class="validation-message">
-            not valid
-        </div>
-        <div *ngIf="
-            parentForm.controls[controlName].invalid &&
-              (parentForm.controls[controlName].dirty || parentForm.controls[controlName].touched)
-            ">
-            <div *ngIf="parentForm.controls[controlName].errors?.['maxLength']" class="alert alert-warning" role="alert">
-                {{displayName}} value is too long
+        @if (parentForm.controls[controlName].enabled === true && !parentForm.controls[controlName].valid) {
+            <div class="validation-message">
+                not valid
             </div>
-            <div *ngIf="parentForm.controls[controlName].errors?.['minLength']" class="alert alert-warning" role="alert">
-                {{displayName}} value is not enough
+        }
+        @if (parentForm.controls[controlName].invalid &&
+            (parentForm.controls[controlName].dirty || parentForm.controls[controlName].touched)) {
+            <div>
+                @if (parentForm.controls[controlName].errors?.['maxLength']) {
+                    <div class="alert alert-warning" role="alert">
+                        {{displayName}} value is too long
+                    </div>
+                }
+                @if (parentForm.controls[controlName].errors?.['minLength']) {
+                    <div class="alert alert-warning" role="alert">
+                        {{displayName}} value is not enough
+                    </div>
+                }
+                @if (parentForm.controls[controlName].errors?.['required']) {
+                    <div class="alert alert-warning" role="alert">
+                        {{displayName}} value is required
+                    </div>
+                }
+                @if (parentForm.controls[controlName].errors?.['noSpaces']) {
+                    <div class="alert alert-warning" role="alert">
+                        {{displayName}} value cannot contain spaces
+                    </div>
+                }
             </div>
-            <div *ngIf="parentForm.controls[controlName].errors?.['required']" class="alert alert-warning" role="alert">
-                {{displayName}} value is required
-            </div>
-            <div *ngIf="parentForm.controls[controlName].errors?.['noSpaces']" class="alert alert-warning" role="alert">
-                {{displayName}} value cannot contain spaces
-            </div>
-        </div>
+        }
     </div>
 </ng-container>

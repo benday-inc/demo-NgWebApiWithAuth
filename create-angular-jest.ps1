@@ -1,3 +1,11 @@
+# PowerShell Script to Create Angular Project with Jest Testing
+# Supports Angular CLI 19.2+ and Angular 20
+#
+# Note: Karma is deprecated in Angular but still included by default.
+# This script removes Karma and configures Jest as the test runner.
+# Jest provides better performance, better error messages, and is more
+# familiar to developers coming from other JavaScript/TypeScript projects.
+
 # Check if jq is installed
 if (-not (Get-Command jq -ErrorAction SilentlyContinue)) {
     Write-Host "Error: jq is not installed. Install it using 'winget install jqlang.jq' (Windows) or 'brew install jq' (macOS)." -ForegroundColor Red
@@ -15,8 +23,10 @@ $angularVersion = ng version | Select-String -Pattern "Angular CLI: (\d+\.\d+)" 
 
 Write-Host "Angular CLI version: $angularVersion"
 
-if ($angularVersion -notlike "19.2*") {
-    Write-Host "Error: Angular CLI version must start with 19.2. You are using version $angularVersion." -ForegroundColor Red
+# Accept both Angular 19.2+ and 20.x versions
+if ($angularVersion -notlike "19.2*" -and $angularVersion -notlike "20.*") {
+    Write-Host "Error: Angular CLI version must be 19.2+ or 20.x. You are using version $angularVersion." -ForegroundColor Red
+    Write-Host "Note: This script supports Angular 19.2+ and Angular 20." -ForegroundColor Yellow
     exit 1
 }
 
@@ -85,10 +95,20 @@ export default {
     ],
   },
   moduleNameMapper: {
+    // Updated for Angular 20 - using fesm2022 format
     '@angular/core/testing': '<rootDir>/node_modules/@angular/core/fesm2022/testing.mjs',
+    '@angular/(.*)': '<rootDir>/node_modules/@angular/$1',
   },
   extensionsToTreatAsEsm: ['.ts', '.mts'],
   transformIgnorePatterns: ['node_modules/(?!.*\.mjs$)'],
+  // Additional settings for Angular 20 compatibility
+  moduleFileExtensions: ['ts', 'js', 'html', 'mjs'],
+  collectCoverageFrom: [
+    'src/**/*.{ts,js}',
+    '!src/**/*.spec.{ts,js}',
+    '!src/**/main.ts',
+    '!src/**/environment*.ts'
+  ],
 };
 '@ | Out-File jest.config.ts -Encoding utf8
 
@@ -103,4 +123,8 @@ Write-Host "Empty setup-jest.ts has been created"
 git add .
 git commit -m "Modified angular.json to use Jest"
 
-Write-Host "✅ Angular project '$projectName' is set up with Jest. Use 'ng test' to run your tests."
+Write-Host "✅ Angular project '$projectName' is set up with Jest." -ForegroundColor Green
+Write-Host "   - Karma has been removed (deprecated in Angular)" -ForegroundColor Cyan
+Write-Host "   - Jest is now configured as the test runner" -ForegroundColor Cyan
+Write-Host "   - Use 'ng test' to run your tests" -ForegroundColor Yellow
+Write-Host "   - Use 'ng test --watch' for continuous testing" -ForegroundColor Yellow

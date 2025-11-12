@@ -1,6 +1,7 @@
 <form [formGroup]="theForm" class="form-group">
-    <div *ngIf="message !== ''" class="alert alert-primary">{{message}}
-    </div>
+    @if (message !== '') {
+        <div class="alert alert-primary">{{message}}</div>
+    }
 
 
     <div class="form-group mb-3 col-5">
@@ -21,26 +22,28 @@
             </div>
         </div>
 
-        <div class="row mb-3 mt-3" *ngIf="theForm.controls.claims.controls.length === 0">
-            <i>(user has no claims)</i>
-        </div>
+        @if (theForm.controls.claims.controls.length === 0) {
+            <div class="row mb-3 mt-3">
+                <i>(user has no claims)</i>
+            </div>
+        }
 
-        <div *ngFor="let claim of theForm.controls.claims.controls; let i = index" 
-            [formGroupName]="i"
-            class="row mb-3">
-            <div class="col-5">
-                <input type="text" class="form-control" formControlName="claimType" />
-                
-                <a (click)="setClaimTypeToRole(i)" class="btn btn-link">set to role</a>
-            </div>
-            <div class="col-3">
-                <input type="text" class="form-control" formControlName="claimValue" />
-            </div>
+        @for (claim of theForm.controls.claims.controls; track $index; let i = $index) {
+            <div [formGroupName]="i" class="row mb-3">
+                <div class="col-5">
+                    <input type="text" class="form-control" formControlName="claimType" />
 
-            <div class="col-3">
-                <a (click)="removeClaim(i)" class="btn btn-link btn-secondary">remove</a>
+                    <a (click)="setClaimTypeToRole(i)" class="btn btn-link">set to role</a>
+                </div>
+                <div class="col-3">
+                    <input type="text" class="form-control" formControlName="claimValue" />
+                </div>
+
+                <div class="col-3">
+                    <a (click)="removeClaim(i)" class="btn btn-link btn-secondary">remove</a>
+                </div>
             </div>
-        </div>        
+        }        
     </div>
     <div class="row mt-3">
         <div class="col-6">

@@ -1,6 +1,20 @@
-# DemoApp
+# DemoApp - Angular & WebAPI Authentication Demo
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0 and updated to Angular 20.
+
+## Angular Version
+This demo uses Angular 20 (released May 2025).
+
+### What's New in v20 for .NET Developers:
+- Cleaner template syntax (@if/@for) that's more like Razor/C#
+- Standalone components by default (less boilerplate)
+- Simplified project structure
+- Same great TypeScript support you expect
+
+### Requirements:
+- Node.js 20.19+ or 22.12+ (Angular 20 requirement)
+- TypeScript 5.8 or higher
+- Visual Studio Code or Visual Studio 2022
 
 ## Development server
 

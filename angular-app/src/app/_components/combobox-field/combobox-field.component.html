@@ -4,12 +4,16 @@
 
         <select id="selectbox" class="form-select" formControlName="{{controlName}}" (ngModelChange)="selectionChanged($event)">
             <option value="" disabled selected>(select an option)</option>
-            <option *ngFor="let option of availableValues" [value]="option.key">
-                {{ option.value }}
-            </option>
+            @for (option of availableValues; track option.key) {
+                <option [value]="option.key">
+                    {{ option.value }}
+                </option>
+            }
         </select>
-        <div *ngIf="!parentForm.controls[controlName]?.valid" class="validation-message">
-            not valid
-        </div>
+        @if (!parentForm.controls[controlName]?.valid) {
+            <div class="validation-message">
+                not valid
+            </div>
+        }
     </div>
 </ng-container>

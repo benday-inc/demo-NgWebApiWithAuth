@@ -8,8 +8,10 @@
             </label>
         </div>
 
-        <div *ngIf="!parentForm.controls[controlName]?.valid" class="validation-message">
-            not valid
-        </div>
+        @if (!parentForm.controls[controlName]?.valid) {
+            <div class="validation-message">
+                not valid
+            </div>
+        }
     </div>
 </ng-container>
