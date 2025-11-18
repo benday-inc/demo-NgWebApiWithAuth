@@ -26,7 +26,7 @@ public class IdentityUserControllerFixture : TestClassBase
         var ownerId = "fakeownerid";
 
         // act
-        var response = await client.GetAsync($"api/IdentityUser/{ownerId}");
+        var response = await client.GetAsync($"api/IdentityUser/getallbyownerid/{ownerId}");
 
         // assert
         Assert.NotNull(response);
