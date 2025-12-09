@@ -4,7 +4,33 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AzureCosmosDisableNewtonsoftJsonCheck>true</AzureCosmosDisableNewtonsoftJsonCheck>
+
+    <!-- NuGet Package Properties -->
+    <PackageId>Benday.Identity.CosmosDb</PackageId>
+    <Version>1.0.0-alpha</Version>
+    <Authors>Benjamin Day</Authors>
+    <Company>Benday Inc</Company>
+    <Product>Benday.Identity.CosmosDb</Product>
+    <Description>ASP.NET Core Identity implementation using Azure Cosmos DB as the backing store. Provides user, role, claims, lockout, two-factor authentication, and external login support.</Description>
+    <Copyright>Copyright © Benjamin Day 2025</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/benday-inc/demo-NgWebApiWithAuth</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/benday-inc/demo-NgWebApiWithAuth</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>aspnetcore;identity;cosmosdb;azure;authentication;authorization</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <!-- Package Settings -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" Condition="Exists('README.md')" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Benday.CosmosDb" Version="5.*" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.*" />
